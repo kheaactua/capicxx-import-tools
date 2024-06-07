@@ -1,0 +1,99 @@
+package {
+    default_visibility: ["//visibility:private"],
+}
+
+cc_defaults {
+    name: "example.defaults",
+    defaults: ["capi_app"],
+
+    shared_libs: [
+        "liblog",
+    ],
+
+    export_shared_lib_headers: [
+        "libCommonAPI",
+        "libCommonAPI-SomeIP",
+    ],
+
+    // Cannot be used if project is using Binder
+    rtti: true,
+
+    cpp_std: "c++17",
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Wformat",
+        "-Wformat-security",
+        "-Wconversion",
+        "-Wno-attributes",
+        "-fexceptions",
+        "-fstrict-aliasing",
+        "-fstack-protector",
+        "-fasynchronous-unwind-tables",
+        "-fno-omit-frame-pointer",
+
+        // Helpful wrnings
+        "-Winconsistent-missing-override",
+
+        // Warnings generated from generated headers.  These suprpessions may be
+        // useful to comment out during development.
+        "-Wno-overloaded-virtual",
+    ],
+}
+
+int_dirs = "/v1/test/example/"
+capi_genrule {
+    name: "example.gen",
+    fidl: "fidl/example.fidl",
+    fdepl: "fidl/example.fdepl",
+
+    // Tutorial: If your fidl declares types, you'll have to include the
+    //   additional exported files with the following:
+    // additional_out: [
+    //     "$(coreCommon)" + int_dirs + "ExampleTypes.hpp",
+    //     "$(someipCommon)" + int_dirs + "ExampleTypesSomeIPDeployment.hpp",
+    // ],
+
+    interfaces: ["test.example.Example"],
+    versions: ["1.0"],
+
+    // Tutorial: Use the following options to disable components that you don't
+    //   need.  For example, if your AOSP app is only a client, then you should
+    //   disable the service stub.  This will save build time and make the
+    //   purpose of your app clearer in this generator module
+
+    // disable_proxy: true,
+    // disable_service_stub: true,
+}
+
+cc_library {
+    name: "example.lib.common",
+    defaults: ["example.defaults"],
+    visibility: ["//visibility:public"],
+
+    generated_headers: ["example.gen"],
+    export_generated_headers: ["example.gen"],
+    generated_sources: ["example.gen"],
+}
+
+cc_binary {
+    name: "example.client",
+    stem: "example-client",
+    defaults: ["example.defaults"],
+    visibility: ["//visibility:public"],
+    vendor: true,
+
+    srcs: ["src/client/main.cpp"],
+    shared_libs: ["example.lib.common"],
+}
+
+cc_binary {
+    name: "example.service",
+    stem: "example-service",
+    defaults: ["example.defaults"],
+    visibility: ["//visibility:public"],
+    vendor: true,
+
+    srcs: ["src/service/main.cpp"],
+    shared_libs: ["example.lib.common"],
+}

@@ -1,0 +1,36 @@
+@PACKAGE_INIT@
+
+if(CapiGenerator_FOUND)
+  return()
+endif()
+
+@PACKAGE_INIT@
+
+set(CAPI_INSTALL_REL_DIR "@CAPI_INSTALL_REL_DIR@" CACHE PATH "capicxx relative install directory")
+set(CAPI_INSTALL_DIR "@PACKAGE_CAPI_INSTALL_DIR@" CACHE PATH "capicxx generators abs install directory")
+
+find_program(CAPI_CORE_GEN
+  NAMES
+    commonapi-core-generator-linux-x86_64
+  PATHS
+    $ENV{HOST_DIR}/${CAPI_INSTALL_REL_DIR}/core
+    ${CAPI_INSTALL_DIR}/core
+  REQUIRED
+)
+
+add_executable(common_api_core_gen IMPORTED ${CAPI_CORE_GEN})
+set_target_properties(common_api_core_gen PROPERTIES IMPORTED_LOCATION ${CAPI_CORE_GEN})
+
+find_program(CAPI_SOMEIP_GEN
+  NAMES
+    commonapi-someip-generator-linux-x86_64
+  PATHS
+    $ENV{HOST_DIR}/${CAPI_INSTALL_DIR}/someip
+    ${CAPI_INSTALL_DIR}/someip
+  REQUIRED
+)
+
+add_executable(common_api_someip_gen IMPORTED GLOBAL)
+set_target_properties(common_api_someip_gen PROPERTIES IMPORTED_LOCATION ${CAPI_SOMEIP_GEN})
+
+#  vim: set ts=2 sw=2 tw=0 et :

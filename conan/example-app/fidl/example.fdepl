@@ -1,0 +1,20 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "example.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface test.example.Example {
+    SomeIpServiceID = 1024
+
+    method sayHello {
+        SomeIpMethodID = 11
+        SomeIpReliable = false
+        SomeIpMethodMaxRetentionTime = 5
+        SomeIpMethodRequestDebounceTime = 100
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider as ExampleService {
+  instance test.example.Example {
+    InstanceId = "alpha"
+    SomeIpInstanceID = 22136 // 0x5678
+  }
+}

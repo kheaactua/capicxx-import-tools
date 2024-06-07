@@ -1,0 +1,35 @@
+[settings]
+os=Neutrino
+# armv8 is the same as aarch64le, but some recipes insist on armv8
+arch=armv8
+compiler=gcc
+compiler.version=8
+compiler.libcxx=libstdc++11
+compiler.cppstd=gnu17
+os.version=7.1
+build_type=RelWithDebInfo
+
+[tool_requires]
+ninja/[>=1.12]
+cmake/[>=3.23]
+ccache/[>=4.9]
+
+[buildenv]
+# Either define your QNX_HOST/QNX_TARGET in this section or in your environment
+# by sourcing `qnxsdp-env.sh`
+PATH=+(path)/{{ os.getenv("QNX_HOST") }}/usr/bin
+CC=qcc
+CXX=q++
+CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+[conf]
+tools.build:compiler_executables={"c": "qcc", "cpp": "q++"}
+tools.cmake.cmaketoolchain:generator=Ninja
+tools.cmake.cmaketoolchain:system_processor=aarch64
+tools.cmake.cmaketoolchain:system_name=QNX
+
+# Use this to add custom toolchains
+# tools.cmake.cmaketoolchain:toolchain_file=<path to your QNX profile>
+
+[options]
+boost*:shared=False

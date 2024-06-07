@@ -1,0 +1,26 @@
+{% set compiler, version, compiler_exe = detect_api.detect_clang_compiler() %}
+
+[settings]
+os=Linux
+arch=x86_64
+compiler={{compiler}}
+compiler.version={{detect_api.default_compiler_version(compiler, version)}}
+compiler.cppstd=gnu17
+compiler.libcxx={{detect_api.detect_libcxx(compiler, version, compiler_exe)}}
+build_type=RelWithDebInfo
+
+[tool_requires]
+ninja/[>=1.12.0]
+ccache/[>=4.9.0]
+
+[buildenv]
+CC=clang
+CXX=clang++
+CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+[conf]
+tools.build:compiler_executables={"cpp": "clang++", "c": "clang", "rc": "clang"}
+tools.cmake.cmaketoolchain:generator=Ninja
+
+[options]
+*:verbose_makefile=False

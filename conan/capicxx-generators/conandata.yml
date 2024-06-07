@@ -1,0 +1,8 @@
+sources:
+  "3.2.14":
+    core:
+      url: "https://github.com/COVESA/capicxx-core-tools/releases/download/3.2.14/commonapi_core_generator.zip"
+      sha1: "9922d333432acd25adc59f2262e3ec415e7c8887"
+    someip:
+      url: "https://github.com/COVESA/capicxx-someip-tools/releases/download/3.2.14/commonapi_someip_generator.zip"
+      sha1: "ee915747676ee8740dcdf98299db5fd089954650"

@@ -1,0 +1,75 @@
+// Build and use the "capi_genrule" extension.
+bootstrap_go_package {
+    name: "soong-capi-codegen",
+    pkgPath: "android/soong/external/capi",
+    deps: [
+        "blueprint",
+        "blueprint-proptools",
+        "soong-android",
+        "soong-genrule",
+        "soong-ui-terminal",
+        "soong-ui-logger",
+    ],
+    srcs: ["capi_genrule.go", "locations.go"],
+    pluginFor: ["soong_build"],
+}
+
+prebuilt_build_tool {
+    name: "commonapi.generator.core",
+    enabled: false,
+    src: "generators/core/commonapi-core-generator-linux-x86_64",
+    deps: [
+        "generators/core/*/**/*",
+    ],
+    arch: {
+        x86_64: {
+            enabled: true,
+        }
+    }
+}
+
+prebuilt_build_tool {
+    name: "commonapi.generator.someip",
+    enabled: false,
+    src: "generators/someip/commonapi-someip-generator-linux-x86_64",
+    deps: [
+        "generators/someip/configuration/**/*",
+        "generators/someip/features/**/*",
+        "generators/someip/plugins/**/*",
+    ],
+    arch: {
+        x86_64: {
+            enabled: true,
+        }
+    }
+}
+
+// This modules provides the CommonAPI libs without RTTI.  CommonAPI itself
+// requires RTTI but when linking with non-rtti components building becomes
+// more complicated, so this provides the consumer more wiggle room
+cc_defaults {
+    name: "capi_app_no_rtti",
+
+    shared_libs: [
+        "libvsomeip3",
+        "libvsomeip3-e2e",
+        "libvsomeip3-sd",
+        "libCommonAPI",
+        "libCommonAPI-SomeIP",
+        "liblog",
+    ],
+
+    export_shared_lib_headers: [
+        "libCommonAPI",
+        "libCommonAPI-SomeIP",
+    ],
+}
+
+cc_defaults {
+    name: "capi_app",
+    defaults: ["capi_app_no_rtti"],
+
+    // Without RTTI, a succesful build may hit a seg. fault. right away when
+    // registering the stub.
+    rtti: true,
+}

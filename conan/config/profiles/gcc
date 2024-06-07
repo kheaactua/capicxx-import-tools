@@ -1,0 +1,24 @@
+{% set compiler, version, compiler_exe = detect_api.detect_default_compiler() %}
+
+[settings]
+os=Linux
+arch=x86_64
+compiler={{compiler}}
+compiler.version={{detect_api.default_compiler_version(compiler, version)}}
+compiler.cppstd=gnu17
+compiler.libcxx={{detect_api.detect_libcxx(compiler, version, compiler_exe)}}
+build_type=RelWithDebInfo
+
+[tool_requires]
+ninja/[>=1.12.0]
+cmake/[>=3.23]
+ccache/[>=4.9.0]
+
+[buildenv]
+CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+[conf]
+tools.cmake.cmaketoolchain:generator=Ninja
+
+[options]
+*:verbose_makefile=False
