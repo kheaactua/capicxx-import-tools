@@ -5,6 +5,8 @@ project(capi-generators VERSION 0.1)
 find_program(CAPI_CORE_GEN
   NAMES
     commonapi-core-generator-linux-x86_64
+    commonapi-core-generator-windows-x86_64.exe
+    commonapi-core-generator.app
   PATHS
     ${PROJECT_SOURCE_DIR}/core
   REQUIRED
@@ -14,12 +16,14 @@ find_program(CAPI_CORE_GEN
   NO_SYSTEM_ENVIRONMENT_PATH
   NO_CMAKE_SYSTEM_PATH
 )
-add_executable(capi-core-gen IMPORTED ${CAPI_CORE_GEN})
+add_executable(capi-core-gen IMPORTED GLOBAL)
 set_target_properties(capi-core-gen PROPERTIES IMPORTED_LOCATION ${CAPI_CORE_GEN})
 
 find_program(CAPI_SOMEIP_GEN
   NAMES
     commonapi-someip-generator-linux-x86_64
+    commonapi-someip-generator-windows-x86_64.exe
+    commonapi-someip-generator.app
   PATHS
     ${PROJECT_SOURCE_DIR}/someip
   REQUIRED
@@ -36,12 +40,13 @@ include(GNUInstallDirs)
 set(DEST_BIN_DIR "${CMAKE_INSTALL_BINDIR}/capi" CACHE PATH "Host bin directory")
 
 install(
-  DIRECTORY $<TARGET_FILE_DIR:capi-core-gen>
-  DESTINATION "${DEST_BIN_DIR}"
+  DIRECTORY $<TARGET_FILE_DIR:capi-core-gen>/
+  DESTINATION "${DEST_BIN_DIR}/core"
   COMPONENT capicxx-core-tools
   MESSAGE_NEVER
 )
 
+# Redundant
 install(
   PROGRAMS $<TARGET_FILE:capi-core-gen>
   DESTINATION "${DEST_BIN_DIR}/core"
@@ -49,12 +54,13 @@ install(
 )
 
 install(
-  DIRECTORY $<TARGET_FILE_DIR:capi-someip-gen>
-  DESTINATION "${DEST_BIN_DIR}"
+  DIRECTORY $<TARGET_FILE_DIR:capi-someip-gen>/
+  DESTINATION "${DEST_BIN_DIR}/someip"
   COMPONENT capicxx-someip-tools
   MESSAGE_NEVER
 )
 
+# Redundant
 install(
   PROGRAMS $<TARGET_FILE:capi-someip-gen>
   DESTINATION "${DEST_BIN_DIR}/someip"

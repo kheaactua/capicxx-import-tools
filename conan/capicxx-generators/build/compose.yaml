@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  app:
+    container_name: build-capicxx-tools
+    image: shinyay/docker-mvn-jdk8:latest
+    volumes:
+      - ./docker-entrypoint-build.sh:/bin/docker-entrypoint-build.sh
+      - ./workspace:/workspace
+    entrypoint:
+      - docker-entrypoint-build.sh

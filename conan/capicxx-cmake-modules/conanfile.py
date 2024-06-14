@@ -7,7 +7,7 @@ from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 
 class CapicxxCMakeModulesRecipe(ConanFile):
     name = "capicxx-cmake-modules"
-    package_type = "unknown"
+    package_type = "shared-library"
     settings = "os", "build_type"
     author = "Matthew Russell <matthew.g.russell@gmail.com>"
     description = "CMake modules to import and use capicxx generators"
@@ -20,7 +20,7 @@ class CapicxxCMakeModulesRecipe(ConanFile):
     requires = (
         "capicxx-core-runtime/[>=3.2.3r7, include_prerelease]@covesa/stable",
         "capicxx-someip-runtime/[>=3.2.3r8, include_prerelease]@covesa/stable",
-        "capicxx-generators/3.2.14@kheaactua/stable",
+        "capicxx-generators/3.2.14@kheaactua/prebuilt",
         "vsomeip/3.4.10@covesa/stable",
     )
     exports_sources = ("CMakeLists.txt", "FindScripts/*.cmake")

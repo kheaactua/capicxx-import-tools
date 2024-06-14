@@ -2,7 +2,7 @@ import os
 
 from conan import ConanFile
 from conan.tools.files import get
-from conan.tools.cmake import CMakeToolchain, CMake
+from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 
 
 class CapicxxGeneratorsConan(ConanFile):
@@ -14,11 +14,15 @@ class CapicxxGeneratorsConan(ConanFile):
     url = "https://github.com/covesa/capicxx-someip-tools.git"
     description = "Generators for CommonAPI"
     topics = ("tcp", "C++", "networking")
+
     version = "3.2.14"
     user = "kheaactua"
-    channel = "stable"
+    channel = "prebuilt"
 
     exports_sources = ("CMakeLists.txt", "CapiGeneratorConfig.cmake.in")
+
+    def layout(self):
+        cmake_layout(self, build_folder="bld")
 
     def generate(self):
         tc = CMakeToolchain(self)

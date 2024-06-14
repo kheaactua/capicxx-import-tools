@@ -21,7 +21,7 @@ class ExampleAppConan(ConanFile):
     }
     default_options = {"verbose_makefile": False}
 
-    tool_requires = ("cmake/[>=3.23]", "gtest/[>=1.10]")
+    tool_requires = ("cmake/[>=3.23]", "gtest/[>=1.10]", "capicxx-generators/3.2.14@kheaactua/prebuilt")
     requires = "capicxx-cmake-modules/[>=0.7.5]@kheaactua/stable"
 
     generators = "CMakeToolchain"
@@ -33,9 +33,6 @@ class ExampleAppConan(ConanFile):
         "src/**/*.cpp",
         "CMakeLists.txt",
     )
-
-    def requirements(self):
-        self.requires("vsomeip/[>=3.4.10]@covesa/stable", run=True, libs=True)
 
     def layout(self):
         cmake_layout(self)
